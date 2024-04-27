@@ -25,6 +25,8 @@ class SudokuGenerator:
     def __init__(self, row_length, removed_cells):
         self.row_length = row_length
         self.removed_cells = removed_cells
+        self.board = self.init_board()
+        self.box_length = int(math.sqrt(row_length))
 
     '''
 	Returns a 2D python list of numbers which represents the board
@@ -57,10 +59,10 @@ class SudokuGenerator:
         columns = 0
         board = []
 
-        while rows<self.rows_length:
+        while rows < self.row_length:
             new_rows = []
 
-            while columns<self.rows_length:
+            while columns < self.row_length:
                 new_rows.append(0)
                 columns += 1
             board.append(new_rows)
