@@ -44,13 +44,33 @@ class SudokuGenerator:
     '''
     def print_board(self):
         for i in self.board:
-            count = 0
+            count = 1
             for j in i:
                 print(j, end="")
                 if (count<len(j)):
                     print(" ", end="")
                 count += 1
             print("")
+
+    def init_board(self):
+        rows = 0
+        columns = 0
+        board = []
+
+        while rows<self.rows_length:
+            new_rows = []
+
+            while columns<self.rows_length:
+                new_rows.append(0)
+                columns += 1
+            board.append(new_rows)
+            rows += 1
+            columns = 0
+        return board
+
+
+
+
 
 
 
