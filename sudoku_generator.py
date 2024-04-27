@@ -33,7 +33,7 @@ class SudokuGenerator:
 	Return: list[list]
     '''
     def get_board(self):
-        pass
+        return self.board
 
     '''
 	Displays the board to the console
@@ -43,7 +43,16 @@ class SudokuGenerator:
 	Return: None
     '''
     def print_board(self):
-        pass
+        for i in self.board:
+            count = 0
+            for j in i:
+                print(j, end="")
+                if (count<len(j)):
+                    print(" ", end="")
+                count += 1
+            print("")
+
+
 
     '''
 	Determines if num is contained in the specified row (horizontal) of the board
