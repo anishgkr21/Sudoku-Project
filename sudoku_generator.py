@@ -44,14 +44,9 @@ class SudokuGenerator:
 	Return: None
     '''
     def print_board(self):
-        for i in self.board:
-            count = 1
-            for j in i:
-                print(j, end="")
-                if (count<len(j)):
-                    print(" ", end="")
-                count += 1
-            print("")
+        for i in range(9):
+            print(self.board[i])
+
 
     def init_board(self):
         rows = 0
@@ -140,9 +135,9 @@ class SudokuGenerator:
 	Return: boolean
     '''
     def is_valid(self, row, col, num):
-        if not self.valid_in_box(row,num):
+        if not self.valid_in_row(row, num):
             return False
-        if not self.valid_in_box(col,num):
+        if not self.valid_in_col(col,num):
             return False
         if not self.valid_in_box(row, col, num):
             return False
@@ -160,12 +155,13 @@ class SudokuGenerator:
 	Return: None
     '''
     def fill_box(self, row_start, col_start):
-        numbers= [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        random.shuffle(numbers)
         for j in range(row_start, row_start+3):
             for i in range(col_start, col_start+3):
-                rand_int = random.randint(0, len(numbers))
-                self.board[j][i] = numbers[random-1]
-                numbers.pop(random-1)
+                rand_int = random.randint(0, len(numbers)-1)
+                self.board[j][i] = numbers[rand_int-1]
+                numbers.pop(rand_int-1)
     
     '''
     Fills the three boxes along the main diagonal of the board
@@ -193,7 +189,7 @@ class SudokuGenerator:
 	boolean (whether or not we could solve the board)
     '''
     def fill_remaining(self, row, col):
-        if (col >= self.row_length and row < self.row_length - 1):
+        if col >= self.row_length:
             row += 1
             col = 0
         if row >= self.row_length and col >= self.row_length:
@@ -243,8 +239,9 @@ class SudokuGenerator:
 	Return: None
     '''
     def remove_cells(self):
+        self.print_board()
         count = 0
-        while count > self.removed_cells:
+        while count < self.removed_cells:
             rows = random.randint(0, len(self.board) - 1)
             columns = random.randint(0, len(self.board) - 1)
             if self.board[rows][columns] != 0:
