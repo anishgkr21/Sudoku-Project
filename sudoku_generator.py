@@ -164,7 +164,7 @@ class SudokuGenerator:
         numbers= [1, 2, 3, 4, 5, 6, 7, 8, 9]
         for j in range(row_start, row_start+3):
             for i in range(col_start, col_start+3):
-                random = random.randint(0, len(numbers))
+                rand_int = random.randint(0, len(numbers))
                 self.board[j][i] = numbers[random-1]
                 numbers.pop(random-1)
     
@@ -176,7 +176,10 @@ class SudokuGenerator:
 	Return: None
     '''
     def fill_diagonal(self):
-        pass
+        num = 0
+        while num < 9:
+            self.fill_box(num, num)
+            num += 3
 
     '''
     DO NOT CHANGE
@@ -208,7 +211,6 @@ class SudokuGenerator:
                 col = 0
                 if row >= self.row_length:
                     return True
-        
         for num in range(1, self.row_length + 1):
             if self.is_valid(row, col, num):
                 self.board[row][col] = num
@@ -242,7 +244,13 @@ class SudokuGenerator:
 	Return: None
     '''
     def remove_cells(self):
-        pass
+        count = 0
+        while count > self.removed_cells:
+            rows = random.randint(0, len(self.board) - 1)
+            columns = random.randint(0, len(self.board) - 1)
+            if self.board[rows][columns] != 0:
+                self.board[rows][columns] = 0
+                count += 1
 
 '''
 DO NOT CHANGE
