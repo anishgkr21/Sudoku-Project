@@ -115,18 +115,28 @@ def sudo_buttons(board, screen, event, difficulty):
         result = False
     return [result, board]
 def set_value(board, rows, columns, key):
-    board.update_value(rows, columns, key)
-    board.board[rows][columns] = key
+    if isinstance(key, int):  # Check if the key is an integer
+        if 1 <= key <= 9:  # Check if the key is within the valid range
+            board.update_value(rows, columns, str(key))  # Convert the integer key to a string
+            board.board[rows][columns] = key
+        else:
+            print("Invalid input. Please enter a number between 1 and 9.")
+    else:
+        print("Invalid input. Please enter a valid number.")
+
+
 def main():
     pygame.init()
     pygame.display.set_caption("Sudoku Game")
-    screen = pygame.display.set_mode(([width, height]))
+    screen = pygame.display.set_mode((width, height))
     num_removed_cell = main_screen(screen)
     screen.fill((81, 75, 35))
 
     board = Board(width, height, screen, num_removed_cell)
     board.draw()
     pygame.display.update()
+
+    selected_row, selected_col = None, None  # Initialize selected row and column
 
     while True:
         for event in pygame.event.get():
@@ -136,42 +146,34 @@ def main():
                 if event.key == pygame.K_RETURN:
                     check_if_winner(screen, board)
                     break
+                elif selected_row is not None and selected_col is not None:
+                    if pygame.K_1 <= event.key <= pygame.K_9:
+                        key = event.key - pygame.K_0
+                        board.update_value(selected_row, selected_col, str(key))
+                        selected_row, selected_col = None, None  # Deselect after entering value
+                elif event.key == pygame.K_DOWN:
+                    selected_row = (selected_row + 1) % 9 if selected_row is not None else 0
+                elif event.key == pygame.K_UP:
+                    selected_row = (selected_row - 1) % 9 if selected_row is not None else 8
+                elif event.key == pygame.K_RIGHT:
+                    selected_col = (selected_col + 1) % 9 if selected_col is not None else 0
+                elif event.key == pygame.K_LEFT:
+                    selected_col = (selected_col - 1) % 9 if selected_col is not None else 8
+
+
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 buttons = sudo_buttons(board, screen, event, num_removed_cell)
                 board = buttons[1]
                 if not buttons[0]:
-                    for rows in board.cells:
-                        for columns in board.cells[rows]:
-                            if board.cells[rows][columns].value_rect.collidepoint(event.pos):
-                                go = True
-                                while go:
-                                    board.cells[rows][columns].enable_selection()
-                                    for event2 in pygame.event.get():
-                                        if event2.type == pygame.KEYDOWN:
-                                            if event2.key == pygame.K_DOWN:
-                                                board.cells[rows][columns].disable_selection()
-                                                columns += 1 if columns != 8 else 0
-                                            elif event2.key == pygame.K_UP:
-                                                board.cells[rows][columns].disable_selection()
-                                                columns -= 1 if columns != 0 else 0
-                                            elif event2.key == pygame.K_RIGHT:
-                                                board.cells[rows][columns].disable_selection()
-                                                rows += 1 if rows != 8 else 0
-                                            elif event2.key == pygame.K_LEFT:
-                                                board.cells[rows][columns].disable_selection()
-                                                rows -= 1 if rows != 0 else 0
-                                            elif pygame.K_1 <= event2.key <= pygame.K_9:
-                                                set_value(board, rows, columns, event2.key - pygame.K_0)
-                                                go = False
-                                                break
-                                        if event2.type == pygame.QUIT:
-                                            sys.exit()
-                                        if event2.type == pygame.MOUSEBUTTONDOWN:
-                                            board = sudo_buttons(board, screen, event2, num_removed_cell)[1]
-                                    board.draw()  # Update display after making changes
-                                board.cells[rows][columns].disable_selection()
+                    mouse_x, mouse_y = event.pos
+                    selected_col = mouse_x // cell_spacing
+                    selected_row = mouse_y // cell_spacing
 
+        board.draw()  # Update display after making changes
+        if selected_row is not None and selected_col is not None:
+            board.cells[selected_row][selected_col].enable_selection()  # Draw outline around selected cell
         pygame.display.update()
 
 if __name__ == "__main__":
     main()
+

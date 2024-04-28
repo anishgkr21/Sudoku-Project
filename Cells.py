@@ -31,7 +31,8 @@ class Cell:
             pygame.draw.rect(self.screen, "blue", pygame.Rect((self.col * 60) + 5, (self.row * 60) + 5, cell_spacing - 10, cell_spacing - 10))
             self.sketched_value = sketched_val
             value_font = pygame.font.Font(None, 60)
-            value_surf = value_font.render(f'{self.sketched_value if ord("1") <= ord(self.sketched_value) <= ord("9") else "      "}', True, (30, 30, 30))
+            value_surf = value_font.render(f'{str(self.sketched_value) if "1" <= str(self.sketched_value) <= "9" else "      "}', True, (30, 30, 30))
+
             self.value_rect = value_surf.get_rect(center=(cell_spacing // 2 + cell_spacing * self.col, cell_spacing // 2 + cell_spacing * self.row))
             self.screen.blit(value_surf, self.value_rect)
             pygame.display.update()

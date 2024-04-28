@@ -40,6 +40,24 @@ class Board:
                 else:
                     self.cells[columns][rows] = Cell("", rows, columns, screen)
 
+    def is_valid(self, row, col, value):
+        # Check if the value is already in the same row
+        if value in [cell.val for cell in self.cells[row]]:
+            return False
+
+        # Check if the value is already in the same column
+        if value in [self.cells[i][col].val for i in range(9)]:
+            return False
+
+        # Check if the value is already in the same 3x3 group
+        start_row, start_col = 3 * (row // 3), 3 * (col // 3)
+        for i in range(start_row, start_row + 3):
+            for j in range(start_col, start_col + 3):
+                if self.cells[i][j].val == value:
+                    return False
+
+        return True
+
     def draw(self):
         for i in range(1, 3):
             pygame.draw.line(self.screen, "Blue", (0, group_size * i), (self.width, group_size * i), 6)
