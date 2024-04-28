@@ -34,7 +34,12 @@ class Board:
         for columns in range(9):
             self.cells[columns] = {}
             for rows in range(9):
-                self.cells[columns][rows] = Cell(f"{self.board[columns][rows]}", rows, columns, screen)
+                cell_value = self.board[columns][rows]
+                if cell_value != 0:
+                    self.cells[columns][rows] = Cell(str(cell_value), rows, columns, screen)
+                else:
+                    self.cells[columns][rows] = Cell("", rows, columns, screen)
+
     def draw(self):
         for i in range(1, 3):
             pygame.draw.line(self.screen, "Blue", (0, group_size * i), (self.width, group_size * i), 6)
@@ -145,6 +150,7 @@ class Board:
             if not self.valid_in_row(i) or not self.valid_in_col(i) or not self.valid_in_box(i):
                 return False
         return True
+
     def update_value(self, row, col, num):
-            self.cells[col][row].set_sketched_value(num)
+        self.cells[col][row].set_sketched_value(num)
 

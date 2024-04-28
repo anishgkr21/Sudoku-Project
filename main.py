@@ -1,9 +1,8 @@
-import pygame
+from pygame import *
 import sys
 from sudoku_generator import generate_sudoku
 from Cells import Cell
 from board import Board
-
 from board import *
 
 running = True
@@ -123,7 +122,7 @@ def main():
     pygame.display.set_caption("Sudoku Game")
     screen = pygame.display.set_mode(([width, height]))
     num_removed_cell = main_screen(screen)
-    screen.fill((81,75,35))
+    screen.fill((81, 75, 35))
 
     board = Board(width, height, screen, num_removed_cell)
     board.draw()
@@ -169,7 +168,10 @@ def main():
                                             sys.exit()
                                         if event2.type == pygame.MOUSEBUTTONDOWN:
                                             board = sudo_buttons(board, screen, event2, num_removed_cell)[1]
+                                    board.draw()  # Update display after making changes
                                 board.cells[rows][columns].disable_selection()
+
+        pygame.display.update()
 
 if __name__ == "__main__":
     main()
