@@ -142,7 +142,7 @@ class Board:
 
     def check_board(self):
         for i in range(9):
-            if not self.valid_in_x(i) or not self.valid_in_y(i) or not self.valid_in_box(i):
+            if not self.valid_in_row(i) or not self.valid_in_col(i) or not self.valid_in_box(i):
                 return False
         return True
     def update_value(self, row, col, num):
